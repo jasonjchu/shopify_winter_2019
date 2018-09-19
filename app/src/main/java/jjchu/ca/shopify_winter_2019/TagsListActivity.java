@@ -1,13 +1,14 @@
 package jjchu.ca.shopify_winter_2019;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import jjchu.ca.shopify_winter_2019.APIClient.APIClient;
 import jjchu.ca.shopify_winter_2019.APIClient.ShopifyService;
 import jjchu.ca.shopify_winter_2019.Models.ProductsModel;
+import jjchu.ca.shopify_winter_2019.RecyclerTools.TagsAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,11 +25,6 @@ public class TagsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tags_list);
 
-        recyclerView = findViewById(R.id.tags_recycler_view);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
         Retrofit retrofit = APIClient.getClient();
         ShopifyService service = retrofit.create(ShopifyService.class);
         Call<ProductsModel> call = service.getProducts();
@@ -44,10 +40,28 @@ public class TagsListActivity extends AppCompatActivity {
                 System.out.println("Error retrieving product data.");
             }
         });
+    }
 
-        //TODO: Create adapter
-        //adapter = new tagAdapter(tagData);
-        //recyclerView.setAdapter(adapter);
+    private void makeRecycler(ProductsModel products) {
+        recyclerView = findViewById(R.id.tags_recycler_view);
 
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new TagsAdapter(products);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void stopProgress() {
+        //TODO: Create progress bar
+    }
+
+    private void startProgress() {
+        //TODO: Implement this
+    }
+
+    private String[] parseProducts() {
+        //TODO: Implement this
+        return new String[0];
     }
 }

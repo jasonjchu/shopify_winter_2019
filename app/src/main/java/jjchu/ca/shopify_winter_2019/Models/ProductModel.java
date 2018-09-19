@@ -5,4 +5,20 @@ public class ProductModel {
     private String title;
     private String tags;
     private ImageModel image;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public ImageModel getImage() {
+        return image;
+    }
 }

@@ -1,7 +1,6 @@
 package jjchu.ca.shopify_winter_2019.APIClient;
 
 import jjchu.ca.shopify_winter_2019.Models.ProductsModel;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
