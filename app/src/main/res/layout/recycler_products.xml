@@ -16,7 +16,6 @@
             <ImageView
                 android:layout_width="300px"
                 android:layout_height="300px"
-                android:padding="8dp"
                 android:id="@+id/productImage"
                 android:background="@drawable/image_border"/>
 

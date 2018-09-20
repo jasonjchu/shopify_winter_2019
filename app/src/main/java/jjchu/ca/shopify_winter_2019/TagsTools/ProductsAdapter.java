@@ -1,18 +1,32 @@
 package jjchu.ca.shopify_winter_2019.TagsTools;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import jjchu.ca.shopify_winter_2019.APIClient.ImageDownloader;
 import jjchu.ca.shopify_winter_2019.Models.ProductModel;
 import jjchu.ca.shopify_winter_2019.Models.VariantModel;
 import jjchu.ca.shopify_winter_2019.R;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
     private List<ProductModel> products;
@@ -50,7 +64,35 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 .setMinimumWidth(product.getImage().getWidth());
         ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
                 .setMinimumHeight(product.getImage().getHeight());
-        //TODO: Add bitmap
+        //TODO: Clean up the following code:
+        OkHttpClient client = ImageDownloader.getClient();
+        Request req = new Request.Builder()
+                .url(product.getImage().getSrc())
+                .build();
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("no");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream is = response.body().byteStream();
+                final Bitmap bp = BitmapFactory.decodeStream(is);
+
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                                .setImageBitmap(bp);
+                        ((ProgressBar) productsViewHolder.productView.findViewById(R.id.productProgress))
+                                .setVisibility(View.INVISIBLE);
+                    }
+                };
+                mainHandler.post(runnable);
+            }
+        });
     }
 
     @Override
