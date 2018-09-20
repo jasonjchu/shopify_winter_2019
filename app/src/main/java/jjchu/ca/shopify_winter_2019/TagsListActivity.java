@@ -1,5 +1,6 @@
 package jjchu.ca.shopify_winter_2019;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class TagsListActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private TagCache tagCache;
+    private View.OnClickListener tagClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,14 @@ public class TagsListActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.tagProgress);
 
         tagCache = TagCache.getInstance();
+
+        tagClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TagsListActivity.this, ProductsListActivity.class);
+                startActivity(i);
+            }
+        };
 
         Retrofit retrofit = APIClient.getClient();
         ShopifyService service = retrofit.create(ShopifyService.class);
@@ -95,7 +105,7 @@ public class TagsListActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TagsAdapter(tags);
+        adapter = new TagsAdapter(tags, tagClickListener);
         recyclerView.setAdapter(adapter);
     }
 
