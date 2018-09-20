@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import jjchu.ca.shopify_winter_2019.Models.ProductModel;
-import jjchu.ca.shopify_winter_2019.Models.ProductsModel;
 import jjchu.ca.shopify_winter_2019.R;
 
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder> {
-    private ProductModel[] products;
+    private String[] tags;
 
     public static class TagsViewHolder extends RecyclerView.ViewHolder {
         public TextView tagView;
@@ -21,8 +19,8 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
         }
     }
 
-    public TagsAdapter(ProductsModel productsSource) {
-        products = productsSource.products.toArray(new ProductModel[productsSource.products.size()]);
+    public TagsAdapter(String[] tagsSource) {
+        tags = tagsSource;
     }
 
     @NonNull
@@ -37,11 +35,11 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TagsAdapter.TagsViewHolder tagsViewHolder, int i) {
-        tagsViewHolder.tagView.setText(products[i].getTitle());
+        tagsViewHolder.tagView.setText(tags[i]);
     }
 
     @Override
     public int getItemCount() {
-        return products.length;
+        return tags.length;
     }
 }
