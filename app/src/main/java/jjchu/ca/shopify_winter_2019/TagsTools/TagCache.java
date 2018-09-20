@@ -1,4 +1,4 @@
-package jjchu.ca.shopify_winter_2019;
+package jjchu.ca.shopify_winter_2019.TagsTools;
 
 import java.util.Arrays;
 import java.util.HashMap;

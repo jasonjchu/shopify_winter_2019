@@ -1,10 +1,11 @@
-package jjchu.ca.shopify_winter_2019.RecyclerTools;
+package jjchu.ca.shopify_winter_2019.TagsTools;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jjchu.ca.shopify_winter_2019.R;
@@ -14,8 +15,8 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
     private View.OnClickListener listener;
 
     public static class TagsViewHolder extends RecyclerView.ViewHolder {
-        public TextView tagView;
-        public TagsViewHolder(@NonNull TextView v) {
+        public LinearLayout tagView;
+        public TagsViewHolder(@NonNull LinearLayout v) {
             super(v);
             tagView = v;
         }
@@ -29,7 +30,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
     @NonNull
     @Override
     public TagsAdapter.TagsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        TextView v = (TextView) LayoutInflater.from(viewGroup.getContext())
+        LinearLayout v = (LinearLayout) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_tag, viewGroup, false);
 
         TagsViewHolder vh = new TagsViewHolder(v);
@@ -38,7 +39,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TagsAdapter.TagsViewHolder tagsViewHolder, int i) {
-        tagsViewHolder.tagView.setText(tags[i]);
+        ((TextView) tagsViewHolder.tagView.findViewById(R.id.tagTextView)).setText(tags[i]);
         tagsViewHolder.tagView.setOnClickListener(this.listener);
     }
 
