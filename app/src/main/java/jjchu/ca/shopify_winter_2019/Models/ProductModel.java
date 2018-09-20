@@ -1,13 +1,15 @@
 package jjchu.ca.shopify_winter_2019.Models;
 
+import java.util.List;
+
 public class ProductModel {
-    private String id;
     private String title;
     private String tags;
     private ImageModel image;
+    private List<VariantModel> variants;
 
-    public String getId() {
-        return id;
+    public List<VariantModel> getVariants() {
+        return variants;
     }
 
     public String getTitle() {

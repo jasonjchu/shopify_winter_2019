@@ -32,4 +32,8 @@ public class DataCache {
         Arrays.sort(tagArray);
         return tagArray;
     }
+
+    public List<ProductModel> getProducts(String name) {
+        return tagMap.get(name);
+    }
 }
