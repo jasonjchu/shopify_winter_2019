@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import jjchu.ca.shopify_winter_2019.APIClient.APIClient;
 import jjchu.ca.shopify_winter_2019.APIClient.ShopifyService;
@@ -41,6 +42,7 @@ public class TagsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TagsListActivity.this, ProductsListActivity.class);
+                i.putExtra("Product", ((TextView) v.findViewById(R.id.tagTextView)).getText());
                 startActivity(i);
             }
         };
