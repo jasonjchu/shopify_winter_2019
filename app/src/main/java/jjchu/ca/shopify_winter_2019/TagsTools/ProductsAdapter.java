@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,12 +41,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     @Override
     public void onBindViewHolder(@NonNull final ProductsViewHolder productsViewHolder, final int i) {
+        ProductModel product = products.get(i);
         ((TextView) productsViewHolder.productView.findViewById(R.id.productName))
-                .setText(products.get(i).getTitle());
+                .setText(product.getTitle());
         ((TextView) productsViewHolder.productView.findViewById(R.id.productInventory))
-                .setText("Inventory: " + getInventory(products.get(i).getVariants()));
+                .setText("Inventory: " + getInventory(product.getVariants()));
+        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                .setMinimumWidth(product.getImage().getWidth());
+        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                .setMinimumHeight(product.getImage().getHeight());
         //TODO: Add bitmap
-//        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
     }
 
     @Override
