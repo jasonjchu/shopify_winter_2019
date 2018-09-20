@@ -1,9 +1,9 @@
 package jjchu.ca.shopify_winter_2019.Models;
 
 public class VariantModel {
-    private String inventory_quantity;
+    private int inventory_quantity;
 
-    public String getInventory_quantity() {
+    public int getInventory_quantity() {
         return inventory_quantity;
     }
 }
