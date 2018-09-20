@@ -13,7 +13,6 @@ import jjchu.ca.shopify_winter_2019.APIClient.APIClient;
 import jjchu.ca.shopify_winter_2019.APIClient.ShopifyService;
 import jjchu.ca.shopify_winter_2019.Models.ProductModel;
 import jjchu.ca.shopify_winter_2019.Models.ProductsModel;
-import jjchu.ca.shopify_winter_2019.TagsTools.TagCache;
 import jjchu.ca.shopify_winter_2019.TagsTools.TagsAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +25,7 @@ public class TagsListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private TagCache tagCache;
+    private DataCache dataCache;
     private View.OnClickListener tagClickListener;
 
     @Override
@@ -36,7 +35,7 @@ public class TagsListActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.tagProgress);
 
-        tagCache = TagCache.getInstance();
+        dataCache = DataCache.getInstance();
 
         tagClickListener = new View.OnClickListener() {
             @Override
@@ -59,7 +58,7 @@ public class TagsListActivity extends AppCompatActivity {
                         for (ProductModel product : products.products) {
                             String newTags[] = product.getTags().split(", ");
                             for (String addedTag : newTags) {
-                                tagCache.addTag(addedTag);
+                                dataCache.addProduct(addedTag, product);
                             }
                         }
                     } else {
@@ -81,7 +80,7 @@ public class TagsListActivity extends AppCompatActivity {
                     stopProgress();
                 }
 
-                makeRecycler(tagCache.getTagArray());
+                makeRecycler(dataCache.getTagArray());
                 stopProgress();
             }
 
