@@ -8,9 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:paddingLeft="6dp"/>
+        android:padding="6dp"/>
 
     <View
         android:layout_width="fill_parent"
