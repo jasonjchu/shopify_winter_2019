@@ -1,4 +1,4 @@
-package jjchu.ca.shopify_winter_2019.TagsTools;
+package jjchu.ca.shopify_winter_2019.RecyclerAdapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

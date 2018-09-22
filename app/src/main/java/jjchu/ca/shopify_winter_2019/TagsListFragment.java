@@ -1,26 +1,29 @@
 package jjchu.ca.shopify_winter_2019;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import jjchu.ca.shopify_winter_2019.APIClient.APIClient;
 import jjchu.ca.shopify_winter_2019.APIClient.ShopifyService;
 import jjchu.ca.shopify_winter_2019.Models.ProductModel;
 import jjchu.ca.shopify_winter_2019.Models.ProductsModel;
-import jjchu.ca.shopify_winter_2019.TagsTools.TagsAdapter;
+import jjchu.ca.shopify_winter_2019.RecyclerAdapters.TagsAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class TagsListActivity extends AppCompatActivity {
+public class TagsListFragment extends Fragment {
 
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
@@ -28,22 +31,26 @@ public class TagsListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private DataCache dataCache;
     private View.OnClickListener tagClickListener;
+    private OnTagFragmentInteractionListener listener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tags_list);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnTagFragmentInteractionListener) context;
+    }
 
-        progressBar = findViewById(R.id.tagProgress);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         dataCache = DataCache.getInstance();
 
         tagClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TagsListActivity.this, ProductsListActivity.class);
-                i.putExtra("Product", ((TextView) v.findViewById(R.id.tagTextView)).getText());
-                startActivity(i);
+                listener.onFragmentInteraction(
+                        ((TextView) v.findViewById(R.id.tagTextView)).getText().toString()
+                );
             }
         };
 
@@ -64,22 +71,14 @@ public class TagsListActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        //TODO: Maybe change to a toast?
-                        AlertDialog alertDialog = new AlertDialog.Builder(TagsListActivity.this).create();
-                        alertDialog.setTitle("Error");
-                        alertDialog.setMessage("No products found.");
-                        alertDialog.show();
+                        Toast.makeText(getActivity(), "No products available.",
+                                Toast.LENGTH_LONG).show();
 
                         stopProgress();
                     }
                 } else{
-                    //TODO: Maybe change to a toast?
-                    AlertDialog alertDialog = new AlertDialog.Builder(TagsListActivity.this).create();
-                    alertDialog.setTitle("Error");
-                    alertDialog.setMessage("Got status code " + response.code() + ".");
-                    alertDialog.show();
-
-                    stopProgress();
+                    Toast.makeText(getActivity(), "Error: Server error.",
+                            Toast.LENGTH_LONG).show();
                 }
 
                 makeRecycler(dataCache.getTagArray());
@@ -88,23 +87,29 @@ public class TagsListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProductsModel> call, Throwable t) {
-                //TODO: Maybe change to a toast?
-                AlertDialog alertDialog = new AlertDialog.Builder(TagsListActivity.this).create();
-                alertDialog.setTitle("Error");
-                alertDialog.setMessage("Cannot connect to server.");
-                alertDialog.show();
-
+                Toast.makeText(getActivity(), "Error: Unable to connect to server.",
+                        Toast.LENGTH_LONG).show();
                 stopProgress();
             }
         });
     }
 
-    private void makeRecycler(String[] tags) {
-        recyclerView = findViewById(R.id.tagsRecyclerView);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_tags_list, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        progressBar = view.findViewById(R.id.tagProgress);
+        recyclerView = view.findViewById(R.id.tagsRecyclerView);
+    }
+
+    private void makeRecycler(String[] tags) {
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new TagsAdapter(tags, tagClickListener);
@@ -113,5 +118,9 @@ public class TagsListActivity extends AppCompatActivity {
 
     private void stopProgress() {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public interface OnTagFragmentInteractionListener {
+        void onFragmentInteraction(String product);
     }
 }

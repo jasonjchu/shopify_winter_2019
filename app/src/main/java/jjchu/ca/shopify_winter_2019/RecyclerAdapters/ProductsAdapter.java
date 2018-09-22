@@ -1,4 +1,4 @@
-package jjchu.ca.shopify_winter_2019.TagsTools;
+package jjchu.ca.shopify_winter_2019.RecyclerAdapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

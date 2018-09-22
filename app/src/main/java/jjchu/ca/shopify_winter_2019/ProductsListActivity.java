@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import jjchu.ca.shopify_winter_2019.TagsTools.ProductsAdapter;
+import jjchu.ca.shopify_winter_2019.RecyclerAdapters.ProductsAdapter;
 
 public class ProductsListActivity extends AppCompatActivity {
 
