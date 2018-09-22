@@ -48,7 +48,7 @@ public class TagsListFragment extends Fragment {
         tagClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onFragmentInteraction(
+                listener.onTagInteraction(
                         ((TextView) v.findViewById(R.id.tagTextView)).getText().toString()
                 );
             }
@@ -63,6 +63,7 @@ public class TagsListFragment extends Fragment {
             public void onResponse(Call<ProductsModel> call, Response<ProductsModel> response) {
                 if(response.code() == 200) {
                     if(response.body() != null) {
+                        dataCache.clear();
                         ProductsModel products = response.body();
                         for (ProductModel product : products.products) {
                             String newTags[] = product.getTags().split(", ");
@@ -121,6 +122,6 @@ public class TagsListFragment extends Fragment {
     }
 
     public interface OnTagFragmentInteractionListener {
-        void onFragmentInteraction(String product);
+        void onTagInteraction(String product);
     }
 }

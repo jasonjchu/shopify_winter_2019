@@ -20,6 +20,10 @@ public class DataCache {
         tagMap = new HashMap<>();
     }
 
+    public void clear() {
+        tagMap.clear();
+    }
+
     public void addProduct(String tag, ProductModel product) {
         if(!tagMap.containsKey(tag)) {
             tagMap.put(tag, new LinkedList<ProductModel>());
