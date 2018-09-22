@@ -50,8 +50,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         LinearLayout v = (LinearLayout) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_products, viewGroup, false);
 
-        ProductsViewHolder vh = new ProductsViewHolder(v);
-        return vh;
+        return new ProductsViewHolder(v);
     }
 
     @Override
@@ -73,18 +72,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                final Resources res = productsViewHolder.productView.getContext().getResources();
-
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
-                                .setImageDrawable(res.getDrawable(R.drawable.ic_error));
-                        stopProgress(productsViewHolder);
-                    }
-                };
-                mainHandler.post(runnable);
+                setError(productsViewHolder);
             }
 
             @Override
@@ -105,32 +93,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                         };
                         mainHandler.post(runnable);
                     } catch (Error e){
-                        final Resources res = productsViewHolder.productView.getContext().getResources();
-
-                        Handler mainHandler = new Handler(Looper.getMainLooper());
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
-                                        .setImageDrawable(res.getDrawable(R.drawable.ic_error));
-                                stopProgress(productsViewHolder);
-                            }
-                        };
-                        mainHandler.post(runnable);
+                        setError(productsViewHolder);
                     }
                 } else{
-                    final Resources res = productsViewHolder.productView.getContext().getResources();
-
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
-                                    .setImageDrawable(res.getDrawable(R.drawable.ic_error));
-                            stopProgress(productsViewHolder);
-                        }
-                    };
-                    mainHandler.post(runnable);
+                    setError(productsViewHolder);
                 }
             }
         });
@@ -152,5 +118,20 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     private void stopProgress(ProductsViewHolder productsViewHolder) {
         (productsViewHolder.productView.findViewById(R.id.productProgress))
                 .setVisibility(View.INVISIBLE);
+    }
+
+    public void setError(final ProductsViewHolder productsViewHolder){
+        final Resources res = productsViewHolder.productView.getContext().getResources();
+
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                        .setImageDrawable(res.getDrawable(R.drawable.ic_error));
+                stopProgress(productsViewHolder);
+            }
+        };
+        mainHandler.post(runnable);
     }
 }
