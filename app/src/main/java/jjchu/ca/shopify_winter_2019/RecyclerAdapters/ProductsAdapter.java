@@ -1,5 +1,6 @@
 package jjchu.ca.shopify_winter_2019.RecyclerAdapters;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -33,7 +34,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     public static class ProductsViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout productView;
-        public ProductsViewHolder(@NonNull LinearLayout v) {
+        ProductsViewHolder(@NonNull LinearLayout v) {
             super(v);
             productView = v;
         }
@@ -60,11 +61,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 .setText(product.getTitle());
         ((TextView) productsViewHolder.productView.findViewById(R.id.productInventory))
                 .setText("Inventory: " + getInventory(product.getVariants()));
-        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+        (productsViewHolder.productView.findViewById(R.id.productImage))
                 .setMinimumWidth(product.getImage().getWidth());
-        ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+        (productsViewHolder.productView.findViewById(R.id.productImage))
                 .setMinimumHeight(product.getImage().getHeight());
-        //TODO: Clean up the following code:
+
         OkHttpClient client = ImageDownloader.getClient();
         Request req = new Request.Builder()
                 .url(product.getImage().getSrc())
@@ -72,25 +73,65 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("no");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                InputStream is = response.body().byteStream();
-                final Bitmap bp = BitmapFactory.decodeStream(is);
+                final Resources res = productsViewHolder.productView.getContext().getResources();
 
                 Handler mainHandler = new Handler(Looper.getMainLooper());
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
-                                .setImageBitmap(bp);
-                        ((ProgressBar) productsViewHolder.productView.findViewById(R.id.productProgress))
-                                .setVisibility(View.INVISIBLE);
+                                .setImageDrawable(res.getDrawable(R.drawable.ic_error));
+                        stopProgress(productsViewHolder);
                     }
                 };
                 mainHandler.post(runnable);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                if(response.code() == 200) {
+                    try {
+                        InputStream is = response.body().byteStream();
+                        final Bitmap bp = BitmapFactory.decodeStream(is);
+
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                                        .setImageBitmap(bp);
+                                stopProgress(productsViewHolder);
+                            }
+                        };
+                        mainHandler.post(runnable);
+                    } catch (Error e){
+                        final Resources res = productsViewHolder.productView.getContext().getResources();
+
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                                        .setImageDrawable(res.getDrawable(R.drawable.ic_error));
+                                stopProgress(productsViewHolder);
+                            }
+                        };
+                        mainHandler.post(runnable);
+                    }
+                } else{
+                    final Resources res = productsViewHolder.productView.getContext().getResources();
+
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            ((ImageView) productsViewHolder.productView.findViewById(R.id.productImage))
+                                    .setImageDrawable(res.getDrawable(R.drawable.ic_error));
+                            stopProgress(productsViewHolder);
+                        }
+                    };
+                    mainHandler.post(runnable);
+                }
             }
         });
     }
@@ -106,5 +147,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             sum += variant.getInventory_quantity();
         }
         return sum;
+    }
+
+    private void stopProgress(ProductsViewHolder productsViewHolder) {
+        (productsViewHolder.productView.findViewById(R.id.productProgress))
+                .setVisibility(View.INVISIBLE);
     }
 }

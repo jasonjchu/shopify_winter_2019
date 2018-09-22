@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 import jjchu.ca.shopify_winter_2019.APIClient.APIClient;
 import jjchu.ca.shopify_winter_2019.APIClient.ShopifyService;
 import jjchu.ca.shopify_winter_2019.Models.ProductModel;
@@ -27,7 +29,7 @@ public class TagsListFragment extends Fragment {
 
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter<TagsAdapter.TagsViewHolder> adapter;
     private RecyclerView.LayoutManager layoutManager;
     private DataCache dataCache;
     private View.OnClickListener tagClickListener;
@@ -54,9 +56,13 @@ public class TagsListFragment extends Fragment {
             }
         };
 
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", 1);
+        params.put("access_token", "c32313df0d0ef512ca64d5b336a0d7c6");
+
         Retrofit retrofit = APIClient.getClient();
         ShopifyService service = retrofit.create(ShopifyService.class);
-        Call<ProductsModel> call = service.getProducts();
+        Call<ProductsModel> call = service.getProducts(params);
 
         call.enqueue(new Callback<ProductsModel>() {
             @Override
@@ -78,7 +84,7 @@ public class TagsListFragment extends Fragment {
                         stopProgress();
                     }
                 } else{
-                    Toast.makeText(getActivity(), "Error: Server error.",
+                    Toast.makeText(getActivity(), "Error: Unable to fetch tags.",
                             Toast.LENGTH_LONG).show();
                 }
 
