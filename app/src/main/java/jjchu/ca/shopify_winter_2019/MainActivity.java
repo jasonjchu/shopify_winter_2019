@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements TagsListFragment.OnTagFragmentInteractionListener, ProductsListFragment.OnProductFragmentInteractionListener {
 
-    TextView title;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

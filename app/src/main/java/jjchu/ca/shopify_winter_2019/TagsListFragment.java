@@ -78,14 +78,10 @@ public class TagsListFragment extends Fragment {
                             }
                         }
                     } else {
-                        Toast.makeText(getActivity(), "No products available.",
-                                Toast.LENGTH_LONG).show();
-
-                        stopProgress();
+                        makeToast("No products available.");
                     }
                 } else{
-                    Toast.makeText(getActivity(), "Error: Unable to fetch tags.",
-                            Toast.LENGTH_LONG).show();
+                    makeToast("Error: Unable to fetch tags.");
                 }
 
                 makeRecycler(dataCache.getTagArray());
@@ -94,8 +90,7 @@ public class TagsListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ProductsModel> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: Unable to connect to server.",
-                        Toast.LENGTH_LONG).show();
+                makeToast("Error: Unable to connect to server.");
                 stopProgress();
             }
         });
@@ -125,6 +120,11 @@ public class TagsListFragment extends Fragment {
 
     private void stopProgress() {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void makeToast(String message) {
+        Toast.makeText(getActivity(), message,
+                Toast.LENGTH_LONG).show();
     }
 
     public interface OnTagFragmentInteractionListener {
